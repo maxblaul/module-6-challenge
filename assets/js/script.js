@@ -128,9 +128,40 @@ $(document).ready(function () {
     }
     function displayLastSearchedCity() {
         if (pastCities[0]) {
-            let queryURL
+            let queryURL = buildURLFromID(pastCities[0].id);
+            searchWeather(queryURL);
+        } else {
+
+            let queryURL = buildURLFromInputs("Chicago");
+            searchWeather(queryUrl);
         }
     }
 
-})
+    $('#search-btn').on('click', function (event) {
+        event.preventDefault();
+
+        let city = cityInput.val().trim();
+        city = city.replace(' ', '%20');
+        cityInput.val('');
+        if (city) {
+            let queryURL = buildURLFromInputs(city);
+            searchWeather(queryURL);
+        }
+    });
+
+    $(document).on("click", "button.city-btn", function (event) {
+        let clickedCity = $(this).text();
+        let foundCity = $.grep(pastCities, function (storedCity) {
+            return clickedCity === storedCity.city;
+        })
+        let queryURL = buildURLFromID(foundCity[0].id)
+        searchWeather(queryURL);
+    });
+
+    loadCities();
+    displayCities(pastCities);
+
+    displayLastSearchedCity();
+
+});
 
