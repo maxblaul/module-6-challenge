@@ -1,7 +1,7 @@
 $(document).ready(function () {
-
+// Open Weather API key
     var apiKey = 'feddd7c570689e8518170dfdc0dcfc76';
-
+// variables to display weather info
     var cityEl = $('h2#city');
     var dateEl = $('h3#date');
     var weatherIconEl = $('img#weather-icon');
@@ -10,11 +10,12 @@ $(document).ready(function () {
     var windEl = $('span#wind');
     var uvIndexEl = $('span#uv-index');
     var cityListEl = $('div.cityList');
-
+// variable for form input
     var cityInput = $('#city-input');
 
     let pastCities = [];
-
+// store past cities
+// function to sort cities
     function compare(a, b) {
         var cityA = a.city.toUpperCase();
         var cityB = b.city.toUpperCase();
@@ -27,7 +28,7 @@ $(document).ready(function () {
         }
         return comparison;
     }
-
+// load from local storage
     function loadCities() {
         var storedCities = JSON.parse(localStorage.getItem('pastCities'));
         if (storedCities) {
@@ -37,16 +38,17 @@ $(document).ready(function () {
     function storedCities() {
         localStorage.setItem('pastCities', JSON.stringify(pastCities));
     }
+    // locally store searched cities
     function buildURLFromInputs(city) {
         if (city) {
             return 'https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid={APIkey}';
         }
     }
-
+// build URL for Open Weather API call
     function buildURLFromID(id) {
         return 'https://api.openweathermap.org/data/2.5/forecast?id=${id}&appid={APIkey}';
     }
-
+// displays last 5 searched cities
     function displayCities(pastCities) {
         cityListEl.empty();
         pastCities.splice(5);
@@ -60,6 +62,7 @@ $(document).ready(function () {
 
         });
     }
+    // colors UV index
     function setUVIndexColor(uvi) {
         if (uvi < 3) {
             return 'green';
@@ -71,7 +74,7 @@ $(document).ready(function () {
             return 'red';
         } else return 'purple';
     }
-
+// search for weather conds by calling open weather api
     function searchWeather(queryURL) {
 
         $.ajax({
@@ -81,7 +84,7 @@ $(document).ready(function () {
 
             let city = response.name;
             let id = response.id;
-
+// store current city in past
             if (pastCities[0]) {
                 pastCities = $.grep(pastCities, function (storedCity) {
                     return id !== storedCity.id;
@@ -90,7 +93,7 @@ $(document).ready(function () {
             pastCities.unshift({ city, id});
             storedCities();
             displayCities(pastCities);
-
+// display current weather in DOM elements
             cityEl.text(response.name);
             let formattedDate = moment.unix(response.dt).format('L');
             dateEl.text(formattedDate);
@@ -99,7 +102,7 @@ $(document).ready(function () {
             temperatureEl.html(((response.main.temp - 273.15) * 1.8 + 32).toFixed(1));
             humidityEl.text(response.main.humidity);
             windEl.text((response.wind.speed * 2.237).toFixed(1));
-
+// call OpenWeather API OneCall with lat and lon to get the UV index and 5 day forecast
             let lat = response.coord.lat;
             let lon = response.coord.lon;
             let queryURLAll = 'https://api.openweathermap.org/data/2.5/onecall?lat={lat}&lon={lon}&appid={apikey}';
@@ -112,7 +115,7 @@ $(document).ready(function () {
                 uvIndexEl.text(response.current.uvi);
                 uvIndexEl.attr('style', 'background-colorL: $(uvColor); color: $(uvColor === "yellow" ? "black" : "white"}');
                 let fiveDay = response.daily;
-
+// display 5 day weather forecast in DOM 
                 for (let i = 0; i <=5; i++) {
                     let currentDay = fiveDay[i];
                     $('div.day-${i} .card-titel').text(moment.unix(currentDay.dt).format('L'));
@@ -126,6 +129,7 @@ $(document).ready(function () {
             });
         });
     }
+// display last searched city
     function displayLastSearchedCity() {
         if (pastCities[0]) {
             let queryURL= buildURLFromID(pastCities[0].id);
@@ -139,7 +143,7 @@ $(document).ready(function () {
 
     $('#search-btn').on('click', function (event) {
         event.preventDefault();
-
+// clears last search and prevents the same search
         let city = cityInput.val().trim();
         city = city.replace(' ', '%20');
         cityInput.val('');
@@ -148,7 +152,7 @@ $(document).ready(function () {
             searchWeather(queryURL);
         }
     });
-
+// click buttons to load each saved city weather
     $(document).on("click", "button.city-btn", function (event) {
         let clickedCity = $(this).text();
         let foundCity = $.grep(pastCities, function (storedCity) {
@@ -157,7 +161,7 @@ $(document).ready(function () {
         let queryURL = buildURLFromID(foundCity[0].id)
         searchWeather(queryURL);
     });
-
+// initialization -- load cities in local storage and display last searched city's weather.
     loadCities();
     displayCities(pastCities);
 
