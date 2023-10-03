@@ -163,5 +163,5 @@ $(document).ready(function () {
 
     displayLastSearchedCity();
 
-});
+}); 
 
