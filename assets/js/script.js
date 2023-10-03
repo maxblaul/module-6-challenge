@@ -1,6 +1,6 @@
 $(document).ready(function () {
 
-    var apiKey = '8a00d01f4a98591e4367d08bde575d4f';
+    var apiKey = 'feddd7c570689e8518170dfdc0dcfc76';
 
     var cityEl = $('h2#city');
     var dateEl = $('h3#date');
@@ -128,11 +128,11 @@ $(document).ready(function () {
     }
     function displayLastSearchedCity() {
         if (pastCities[0]) {
-            let queryURL = buildURLFromID(pastCities[0].id);
+            let queryURL= buildURLFromID(pastCities[0].id);
             searchWeather(queryURL);
         } else {
 
-            let queryURL = buildURLFromInputs("Chicago");
+            let queryURL= buildURLFromInputs("Chicago");
             searchWeather(queryUrl);
         }
     }
