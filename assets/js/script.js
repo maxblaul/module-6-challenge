@@ -1,7 +1,7 @@
 // Selecting HTML elements
 const searchInputEl = document.querySelector("#city-input");
 const submit = document.querySelector("#submit-btn");
-const savedResultsEl = document.querySelector("#saved-results");
+const recentSearchesEl = document.querySelector(".recent-searches");
 const resultsContainerEl = document.querySelector("#display-result");
 const loadingEl = document.querySelector("#loading-icon");
 const loading2El = document.querySelector("#loading-icon2");
@@ -12,14 +12,8 @@ const savedCityEl = localStorage.getItem("savedCity");
 if (savedCityEl) {
     addCityToList(savedCityEl);
 } else {
-    savedResultsEl.textContent = "No city saved.";
+    recentSearchesEl.innerHTML = "No city saved.";
 }
-
-// Add event listener to the saved results element to trigger API call
-savedResultsEl.addEventListener("click", function () {
-    getApi();
-    savedResultsEl.textContent = "No city saved.";
-});
 
 // Function to add a city to the saved results list
 function addCityToList(cityName) {
@@ -31,7 +25,7 @@ function addCityToList(cityName) {
         getApi();
     });
 
-    savedResultsEl.appendChild(listItem);
+    recentSearchesEl.appendChild(listItem); // Fix: Use recentSearchesEl
 }
 
 // Set initial styles for loading indicators
@@ -143,9 +137,3 @@ const displayForecast = function (data) {
     }
     console.log(fiveDayEl);
 };
-
-// Add event listener for the submit button to trigger the API call
-submit.addEventListener("click", function (event) {
-    event.preventDefault();
-    getApi();
-});
