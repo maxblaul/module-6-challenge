@@ -59,3 +59,13 @@ div.fiveDay p.card-title {
 .card {
     background-color: #5e1df8;
 }
+.five-day-forecast {
+    display: flex;
+    justify-content: space-between; /* Adjust the spacing between forecast items */
+  }
+  
+  .forecast-day {
+    flex: 1; /* Distribute available space equally among forecast items */
+    margin: 0 5px; /* Add margin between forecast items for spacing */
+    /* Add any additional styling as needed */
+  }
