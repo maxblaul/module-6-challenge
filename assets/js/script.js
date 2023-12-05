@@ -7,6 +7,7 @@ const loadingEl = document.querySelector("#loading-icon");
 const loading2El = document.querySelector("#loading-icon2");
 const fiveDayEl = document.querySelector("#five-day-forecast");
 const savedCityEl = localStorage.getItem("savedCity");
+const savedCityArr = []
 
 // Check if there's a saved city and display it in the list
 if (savedCityEl) {
@@ -14,14 +15,19 @@ if (savedCityEl) {
 } else {
     recentSearchesEl.innerHTML = "No city saved.";
 }
-
+submit.addEventListener("click", function () {
+    event.preventDefault()
+    // searchInputEl.value = cityName;
+    // console.log(cityName);
+        getApi();
+})
 // Function to add a city to the saved results list
 function addCityToList(cityName) {
     const listItem = document.createElement("li");
     listItem.textContent = cityName;
 
     listItem.addEventListener("click", function () {
-        searchInputEl.value = cityName;
+        // searchInputEl.value = cityName;
         getApi();
     });
 
@@ -116,10 +122,13 @@ const displayResults = function (data) {
     resultsContainerEl.appendChild(displayhumidityEl);
     resultsContainerEl.appendChild(displayWindEl);
 
+    savedCityArr.push(cityEl);
     // Save the city to local storage
-    localStorage.setItem("savedCity", cityEl);
+    localStorage.setItem("savedCity", savedCityArr);
     console.log(resultsContainerEl);
+
 };
+
 
 // Function to display 5-day forecast
 const displayForecast = function (data) {
